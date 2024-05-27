@@ -5,6 +5,18 @@ import sympy as sp
 
 class IntegrasiNumerik:
     def __init__(self, fungsi_str, a, b, n, variabel, nilai_var):
+        """
+        Inisialisasi kelas IntegrasiNumerik dengan fungsi, batas integral, jumlah segmen (subinterval), variabel bebas lainya,
+        dan nilai variabel tersebut.
+
+        Arguments:
+            fungsi_str (str): String dari fungsi yang akan diintegrasikan.
+            a (float): Batas bawah integral.
+            b (float): Batas atas integral.
+            n (int): Jumlah segmen untuk metode numerik.
+            variabel (list): Daftar variabel bebas selain x.
+            nilai_var (list): Daftar nilai untuk variabel bebas selain x.
+        """
         self.fungsi_str = fungsi_str
         self.a = a
         self.b = b
@@ -111,8 +123,8 @@ class IntegrasiNumerik:
 
 def main():
     x = sp.symbols('x')
-    
-    while True:
+
+    def user_input():
         print("Pilih metode:")
         print("1. Kaidah Trapesium")
         print("2. Kaidah Simpson 1/3")
@@ -129,7 +141,7 @@ def main():
             variabel = sorted(fungsi_expr.free_symbols, key=lambda s: s.name)
             if x not in variabel:
                 print("Fungsi harus mengandung variabel x.")
-                continue
+                return None, None, None, None, None
             variabel.remove(x)
             nilai_var = []
             for var in variabel:
@@ -138,6 +150,13 @@ def main():
         except (sp.SympifyError, TypeError) as e:
             print(f"Fungsi tidak valid: {e}")
             print("Pastikan Anda memasukkan fungsi dengan benar. Contoh yang benar: (4*x - x*3)*exp(t*2)")
+            return None, None, None, None, None
+        
+        return pilihan, a, b, n, fungsi_str, variabel, nilai_var
+    
+    while True:
+        pilihan, a, b, n, fungsi_str, variabel, nilai_var = user_input()
+        if pilihan is None:
             continue
         
         integrator = IntegrasiNumerik(fungsi_str, a, b, n, variabel, nilai_var)
